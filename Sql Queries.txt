@@ -1,0 +1,33 @@
+MySQL Queries which I have used in my project
+
+1.Revenue 
+  revenue="select flight_id,sum(amount) as totalrevenue from ticket_flights group by flight_id order by totalrevenue desc"
+  revenue=pd.read_sql(revenue,conn)
+
+2.Fare condition
+ fare_condition="select fare_conditions,sum(amount) as totalrevenue from ticket_flights group by fare_conditions"
+ pd.read_sql(fare_condition,conn)
+
+3.Total Revenue
+total_revenue="select a.flight_id,a.flight_no,a.aircraft_code,b.total_seats,coalesce(c.booked_seats,0)as booked_seats,round((COALESCE(c.booked_seats, 0)*1.0/b.total_seats)*100,2) as            occupancy from(select flight_id,flight_no,aircraft_code from flights) a left join(select aircraft_code,count(seat_no)as total_seats from seats group by aircraft_code)b on  a.aircraft_code=b.aircraft_code left join(select flight_id,count(seat_no)as booked_seats from boarding_passes group by flight_id)c on a.flight_id=c.flight_id" 
+occupancy=pd.read_sql(total_revenue,conn)
+
+4.Low Occupancy 
+low_occupancy="select a.flight_id,a.flight_no,a.aircraft_code,b.total_seats,coalesce(c.booked_seats,0)as booked_seats,round((COALESCE(c.booked_seats, 0)*1.0/b.total_seats)*100,2) as occupancy from(select flight_id,flight_no,aircraft_code from flights) a left join(select aircraft_code,count(seat_no)as total_seats from seats group by aircraft_code)b on a.aircraft_code=b.aircraft_code left join(select flight_id,count(seat_no)as booked_seats from boarding_passes group by flight_id)c on a.flight_id=c.flight_id order by occupancy asc" 
+lo=pd.read_sql(low_occupancy,conn)
+
+5.High Occupancy 
+high_occupancy="select a.flight_id,a.flight_no,a.aircraft_code,b.total_seats,coalesce(c.booked_seats,0)as booked_seats,round((COALESCE(c.booked_seats, 0)*1.0/b.total_seats)*100,2) as occupancy from(select flight_id,flight_no,aircraft_code from flights) a left join(select aircraft_code,count(seat_no)as total_seats from seats group by aircraft_code)b on a.aircraft_code=b.aircraft_code left join(select flight_id,count(seat_no)as booked_seats from boarding_passes group by flight_id)c on a.flight_id=c.flight_id order by occupancy desc" 
+ho=pd.read_sql(high_occupancy,conn)
+
+
+6.Highest Revenue by city
+city_highest="SELECT f.departure_airport,f.arrival_airport,SUM(tf.amount) AS total_revenue FROM flights f JOIN ticket_flights tf ON f.flight_id = tf.flight_id GROUP BY f.departure_airport,f.arrival_airport ORDER BY total_revenue DESC LIMIT 10"
+city_highest=pd.read_sql(city_highest,conn)
+city_highest['route'] = city_highest['departure_airport'] + " → " + city_highest['arrival_airport']
+
+7.lowest Revenue
+city_lowest="SELECT f.departure_airport,f.arrival_airport,SUM(tf.amount) AS total_revenue FROM flights f JOIN ticket_flights tf ON f.flight_id = tf.flight_id GROUP BY f.departure_airport,f.arrival_airport ORDER BY total_revenue asc LIMIT 10"
+city_lowest=pd.read_sql(city_lowest,conn)
+city_lowest['route'] = city_lowest['departure_airport'] + " → " + city_lowest['arrival_airport']
+
