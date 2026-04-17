@@ -1,3 +1,4 @@
+<<<<<<< HEAD
  Airline Data Analysis using SQL & Python
 
 Project Overview
@@ -56,3 +57,6 @@ Business Recommendations
 
 Conclusion
 This project shows how data analysis can help improve airline efficiency and profitability using SQL and Python.
+=======
+# Airline-Data-Analysis-using-Sql-python
+>>>>>>> 637f63d86ba2abb91fc1d1bcf02195507d94da1b
